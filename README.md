@@ -14,7 +14,7 @@ A production-ready billing system built with FastAPI and PostgreSQL.
 - http://127.0.0.1:8000/api/v1/
 
 ## Demo
-- find the walkthrough on Demo.mp4 video
+- Find the Demo video and SS on /Demo
 
 ## Features
 
