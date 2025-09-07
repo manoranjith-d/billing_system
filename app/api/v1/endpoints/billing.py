@@ -27,7 +27,6 @@ async def create_bill(
             bill, background_tasks
         )
         bill_obj.customer_email = bill.customer_email
-        print(balance_denominations)
         return BillResponse(bill=bill_obj, balance_denominations=balance_denominations)
     except (
         InsufficientStockError,
