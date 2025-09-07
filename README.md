@@ -4,6 +4,7 @@ A production-ready billing system built with FastAPI and PostgreSQL.
 
 ## Assumptions
 - Done the ceil for total payable amount post tax - (Paisa/cents issue)
+- Used SMTP Mail service (Gmail)
 - Added Customer given denominsations into denomination Table
 - Didn't added any authentication/logins for admin routes
 - Used AI agents to work on the UI templates 
@@ -14,7 +15,8 @@ A production-ready billing system built with FastAPI and PostgreSQL.
 - http://127.0.0.1:8000/api/v1/
 
 ## Demo
-- Find the Demo video and SS on /Demo
+- Find the SS on /Demo
+- Video - https://drive.google.com/file/d/1s2wiCT3TIrbchZW8RDdNqdyTZ2GmSVT6/view?usp=sharing
 
 ## Features
 
