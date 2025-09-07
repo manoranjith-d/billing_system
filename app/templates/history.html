@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase History</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      }
+
+      .header h1 {
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .nav-links a:hover, .nav-links a.active {
+        background-color: rgba(255,255,255,0.2);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        margin-bottom: 2rem;
+        overflow: hidden;
+      }
+
+      .card-header {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .search-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .search-section h2 {
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      .search-form {
+        display: flex;
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .form-group {
+        flex: 1;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+      }
+
+      .bills-container {
+        margin-top: 2rem;
+      }
+
+      .bill-card {
+        background: white;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 1px solid #dee2e6;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .bill-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      }
+
+      .bill-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f8f9fa;
+      }
+
+      .bill-id {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #007bff;
+      }
+
+      .bill-date {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .bill-items {
+        margin-top: 1rem;
+      }
+
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+      }
+
+      .items-table th,
+      .items-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .items-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .items-table tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      .bill-totals {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .total-item {
+        text-align: center;
+      }
+
+      .total-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+      }
+
+      .total-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .no-bills {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+
+      .no-bills-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+        
+        .search-form {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .bill-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+        
+        .bill-totals {
+          grid-template-columns: 1fr;
+        }
+        
+        .items-table {
+          font-size: 0.9rem;
+        }
+        
+        .nav-links {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Purchase History</h1>
+      <nav class="nav-links">
+        <a href="/api/v1/">Billing</a>
+        <a href="/api/v1/history" class="active">Purchase History</a>
+        <a href="/api/v1/admin">Admin Dashboard</a>
+      </nav>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2>Search Purchase History</h2>
+        </div>
+        <div class="card-body">
+          <div class="search-section">
+            <div class="search-form">
+              <div class="form-group">
+                <label for="customerEmail">Customer Email:</label>
+                <input
+                  type="email"
+                  id="customerEmail"
+                  class="form-control"
+                  placeholder="Enter customer email"
+                />
+              </div>
+              <button class="btn btn-primary" onclick="searchHistory()">Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Loading purchase history...</p>
+      </div>
+
+      <div class="bills-container" id="billsContainer">
+        <!-- Bills will be displayed here -->
+      </div>
+    </div>
+
+    <script>
+      async function searchHistory() {
+        const email = document.getElementById("customerEmail").value;
+        if (!email) {
+          showAlert("Please enter customer email", "danger");
+          return;
+        }
+
+        try {
+          // Show loading state
+          document.getElementById("loading").style.display = "block";
+          document.getElementById("billsContainer").innerHTML = "";
+
+          const response = await fetch(
+            `/api/v1/bills/customer/${encodeURIComponent(email)}`
+          );
+          const data = await response.json();
+
+          // Debug: Log the response data
+          console.log("API Response:", data);
+
+          const container = document.getElementById("billsContainer");
+
+          if (!data.bills || data.bills.length === 0) {
+            container.innerHTML = `
+              <div class="no-bills">
+                <div class="no-bills-icon">📋</div>
+                <h3>No Purchase History Found</h3>
+                <p>No purchase history found for this customer.</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Debug: Log the bills data
+          console.log("Bills data:", data.bills);
+
+          // Debug: Log each bill and its items
+          data.bills.forEach((bill, index) => {
+            console.log(`Bill ${index + 1}:`, bill);
+            console.log(`Bill ${index + 1} items:`, bill.items);
+            if (bill.items && bill.items.length > 0) {
+              bill.items.forEach((item, itemIndex) => {
+                console.log(`  Item ${itemIndex + 1}:`, item);
+                console.log(`  Item ${itemIndex + 1} product:`, item.product);
+              });
+            }
+          });
+
+          container.innerHTML = data.bills
+            .map(
+              (bill) => `
+                    <div class="bill-card">
+                        <div class="bill-header">
+                            <div>
+                              <div class="bill-id">Bill #${bill.id}</div>
+                              <div style="color:#555; font-size:0.9rem;">Customer: ${bill.customer_email || document.getElementById('customerEmail').value}</div>
+                            </div>
+                            <div class="bill-date">${new Date(
+                              bill.created_at
+                            ).toLocaleString()}</div>
+                        </div>
+
+                        <div class="bill-items">
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Tax %</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${bill.items && bill.items.length > 0 ? bill.items
+                                      .map(
+                                        (item) => `
+                                        <tr>
+                                            <td>${item.product ? item.product.name : `ID: ${item.product_id}`}</td>
+                                            <td>${item.quantity}</td>
+                                            <td>₹${item?.unit_price}</td>
+                                            <td>${item?.tax_percentage}%</td>
+                                            <td>₹${item?.total_amount}</td>
+                                        </tr>
+                                    `
+                                      )
+                                      .join("") : '<tr><td colspan="5" style="text-align: center; color: #666;">No items found</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bill-totals">
+                            <div class="total-item">
+                                <div class="total-label">Tax Amount</div>
+                                <div class="total-value">₹${bill.tax_amount}</div>
+                            </div>
+                            <div class="total-item">
+                                <div class="total-label">Total Amount</div>
+                                <div class="total-value">₹${bill.total_amount}</div>
+                            </div>
+                            <div class="total-item">
+                                <div class="total-label">Paid Amount</div>
+                                <div class="total-value">₹${bill.paid_amount}</div>
+                            </div>
+                            <div class="total-item">
+                                <div class="total-label">Balance Amount</div>
+                                <div class="total-value">₹${bill.balance_amount}</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error fetching purchase history:", error);
+          showAlert("Error fetching purchase history: " + error.message, "danger");
+        } finally {
+          document.getElementById("loading").style.display = "none";
+        }
+      }
+
+      function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+        
+        const container = document.querySelector('.container');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

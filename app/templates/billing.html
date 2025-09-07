@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .products-section {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      background: #f8f9fa;
+    }
+
+    .products-section h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .product-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .denominations-section {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      background: #f8f9fa;
+    }
+
+    .denominations-section h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .denomination-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .denomination-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .denomination-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .denomination-item label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #007bff;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0056b3, #004085);
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #1e7e34);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #1e7e34, #155724);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #c82333, #bd2130);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    #billResult {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      display: none;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #billResult h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .bill-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .bill-detail-item {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .bill-detail-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .bill-detail-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .denominations-list {
+      margin-top: 1rem;
+    }
+
+    .denominations-list h3 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .denominations-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .denominations-list li {
+      padding: 0.5rem;
+      background: #f8f9fa;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .alert {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .product-item {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .denomination-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Billing System</h1>
+    <nav class="nav-links">
+      <a href="/api/v1/" class="active">Billing</a>
+      <a href="/api/v1/history">Purchase History</a>
+      <a href="/api/v1/admin">Admin Dashboard</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div id="_billForm" class="card">
+      <div class="card-header">
+        <h2>Create New Bill</h2>
+      </div>
+      <div class="card-body">
+        <form id="billingForm">
+          <div class="form-group">
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" class="form-control" required />
+          </div>
+
+          <div class="products-section">
+            <h2>Products</h2>
+            <div id="productsContainer">
+              <div class="product-item">
+                <input type="text" class="form-control" placeholder="Product ID" required />
+                <input type="number" class="form-control" placeholder="Quantity" min="1" required />
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(this)">
+                  Remove
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addProduct()">Add New Product</button>
+          </div>
+
+          <div class="denominations-section">
+            <h2>Denominations</h2>
+            <div id="denominationGrid" class="denomination-grid">
+              <!-- Denominations will be populated dynamically -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="paidAmount">Cash paid by customer:</label>
+            <input type="number" id="paidAmount" class="form-control" min="0" step="0.01" required />
+          </div>
+
+          <button type="submit" class="btn btn-success">Generate Bill</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="billResult" class="card">
+      <div class="card-header">
+        <h2>Bill Details</h2>
+      </div>
+      <div class="card-body">
+        <div id="billContent"></div>
+        <div>
+          <button class="btn btn-primary" id="newBillBtn" type="button">New Bill</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch available denominations when page loads
+    async function fetchDenominations() {
+      try {
+        const response = await fetch('/api/v1/denominations/');
+        const denominations = await response.json();
+        const grid = document.getElementById('denominationGrid');
+
+        // Sort denominations by value in descending order
+        denominations.sort((a, b) => b.value - a.value);
+
+        grid.innerHTML = denominations.map(d => `
+            <div class="denomination-item">
+              <label>₹${d.value}:</label>
+              <input type="number" class="form-control" min="0" value="0" data-value="${d.value}" />
+            </div>
+          `).join('');
+      } catch (error) {
+        console.error('Error fetching denominations:', error);
+      }
+    }
+
+    // Call fetchDenominations when page loads
+    document.addEventListener('DOMContentLoaded', fetchDenominations);
+
+    function addProduct() {
+      const container = document.getElementById("productsContainer");
+      const productItem = document.createElement("div");
+      productItem.className = "product-item";
+      productItem.innerHTML = `
+                <input type="text" class="form-control" placeholder="Product ID" required>
+                <input type="number" class="form-control" placeholder="Quantity" min="1" required>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(this)">Remove</button>
+            `;
+      container.appendChild(productItem);
+    }
+
+    function removeProduct(button) {
+      const container = document.getElementById("productsContainer");
+      if (container.children.length > 1) {
+        button.parentElement.remove();
+      }
+    }
+    document.getElementById("newBillBtn").addEventListener("click", function () {
+    const _billForm = document.getElementById("_billForm");
+    const billResult = document.getElementById("billResult");
+
+    // Show form again
+    _billForm.style.display = "block";
+
+    // Hide bill result
+    billResult.style.display = "none";
+});
+
+    document
+      .getElementById("billingForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Collect form data
+        const customerEmail = document.getElementById("customerEmail").value;
+        const paidAmount = parseFloat(
+          document.getElementById("paidAmount").value
+        );
+
+        const products = [];
+        document.querySelectorAll(".product-item").forEach((item) => {
+          products.push({
+            product_id: item.querySelector('input[type="text"]').value,
+            quantity: parseInt(
+              item.querySelector('input[type="number"]').value
+            ),
+          });
+        });
+
+        // Collect denominations
+        const denomination = [];
+        document.querySelectorAll('#denominationGrid .denomination-item input').forEach(input => {
+          const value = parseInt(input.dataset.value);
+          const count = parseInt(input.value);
+          if (count > 0) {
+            denomination.push({
+              value: value,
+              count: count
+            });
+          }
+        });
+        if (denomination.length === 0) {
+          alert('Please select at least one denomination.');
+          return;
+        }
+        if (denomination.some(d => d.count <= 0)) {
+          alert('Denomination count cannot be negative.');
+          return;
+        }
+        // sum of denomination values
+        const denominationTotal = denomination.reduce((total, d) => total + d.value * d.count, 0);
+        if (denominationTotal != paidAmount) {
+          alert('Denomination total is not matching with paid amount.');
+          return;
+        }
+        // Create bill request
+        const billData = {
+          customer_email: customerEmail,
+          items: products,
+          paid_amount: paidAmount,
+          denomination: denomination
+        };
+
+        try {
+          const response = await fetch("/api/v1/bills/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(billData),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            // Display bill result
+            const billResult = document.getElementById("billResult");
+            const billContent = document.getElementById("billContent");
+            const _billForm = document.getElementById("_billForm");
+            _billForm.style.display = "none";
+            billContent.innerHTML = `
+                        <div class="bill-details">
+                            <div class="bill-detail-item">
+                                <div class="bill-detail-label">Customer Email</div>
+                                <div class="bill-detail-value">${result.bill.customer_email || document.getElementById("customerEmail").value}</div>
+                            </div>
+                        </div>
+                        <div class="bill-items" style="margin-top: 1rem;">
+                          <h3>Items</h3>
+                          <table class="items-table" style="width:100%; border-collapse: collapse;">
+                            <thead>
+                              <tr>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Product ID</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Unit Price</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Quantity</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Purchase Price</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Tax % for item</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Tax payable for item</th>
+                                <th style="text-align:left; border-bottom:1px solid #dee2e6; padding:8px;">Total price of the item</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              ${(result.bill.items || []).map(i => `
+                                  <tr>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">${i.product_id}</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">₹${i.unit_price}</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">${i.quantity}</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">₹${i.unit_price * i.quantity}</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">${i.tax_percentage}%</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">₹${i.tax_amount}</td>
+                                    <td style="padding:8px; border-bottom:1px solid #f1f3f5;">₹${i.total_amount}</td>
+                                  </tr>
+                                `).join("")}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="bill-summary" style="margin-top: 2rem; text-align: right;">
+                            <p style="margin: 0.5rem 0;">Total price without tax: ₹${result.bill.total_amount - result.bill.tax_amount}</p>
+                            <p style="margin: 0.5rem 0;">Total tax payable: ₹${result.bill.tax_amount}</p>
+                            <p style="margin: 0.5rem 0;">Net price of the purchased item: ₹${result.bill.total_amount}</p>
+                            <p style="margin: 0.5rem 0;">Rounded down value of purchased items net price: ₹${Math.floor(result.bill.total_amount)}</p>
+                            <p style="margin: 0.5rem 0;">Paid Amount: ₹${result.bill.paid_amount}</p>
+                            <p style="margin: 0.5rem 0;">Balance payable to the customer: ₹${result.bill.balance_amount}</p>
+                        </div>
+                        
+                        <div class="denominations-section">
+                            <h2>Balance Denominations:</h2>
+                            <div style="text-align: right;">
+                                ${(result.balance_denominations || []).map(denom => `
+                                    <div style="margin: 0.5rem 0;">
+                                        <span>₹${denom.value}: ${denom.count}</span>
+                                    </div>
+                                `).join("")}
+                            </div>
+                        </div>
+                    `;
+
+            billResult.style.display = "block";
+          } else {
+            alert("Error: " + result.detail);
+          }
+        } catch (error) {
+          alert("Error generating bill: " + error.message);
+        }
+      });
+  </script>
+</body>
+
+</html>
