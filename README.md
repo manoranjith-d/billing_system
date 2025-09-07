@@ -5,7 +5,7 @@ A production-ready billing system built with FastAPI and PostgreSQL.
 ## Assumptions
 - Done the ceil for total payable amount post tax - (Paisa/cents issue)
 - Used SMTP Mail service (Gmail)
-- Added Customer given denominsations into denomination Table
+- Added Customer given denominations into denomination Table
 - Didn't added any authentication/logins for admin routes
 - Used AI agents to work on the UI templates 
 
@@ -37,8 +37,8 @@ A production-ready billing system built with FastAPI and PostgreSQL.
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd billing-system
+git clone https://github.com/manoranjith-d/billing_system
+cd billing_system
 ```
 
 2. Create and activate virtual environment:
