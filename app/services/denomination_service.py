@@ -68,6 +68,23 @@ class DenominationService:
         except Exception as e:
             self.db.rollback()
             raise DatabaseError(f"Failed to update denomination: {str(e)}")
+    
+    def delete_denomination(self, value: int) -> bool:
+        """Delete denomination"""
+        try:
+            denomination = self.get_denomination(value)
+
+            if denomination:
+                self.db.delete(denomination)   # ✅ actually delete the object
+                self.db.commit()
+                return True
+
+            return False  # no denomination found
+
+        except Exception as e:
+            self.db.rollback()
+            raise DatabaseError(f"Failed to Delete denomination: {str(e)}")
+
 
     def calculate_change(self, amount: float) -> Dict[int, int]:
         """Calculate optimal change distribution for given amount"""

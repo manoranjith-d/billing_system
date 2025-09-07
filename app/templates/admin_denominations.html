@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
@@ -41,8 +42,9 @@
             transition: background-color 0.3s;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255,255,255,0.2);
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         .container {
@@ -54,7 +56,7 @@
         .card {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
             overflow: hidden;
         }
@@ -142,7 +144,7 @@
         .form-control:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
         .table {
@@ -175,7 +177,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
@@ -185,7 +187,7 @@
             border-radius: 10px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .modal-header {
@@ -278,8 +280,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .search-box {
@@ -308,7 +315,7 @@
         }
 
         .denomination-card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .denomination-value {
@@ -347,6 +354,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>Admin Dashboard</h1>
@@ -381,10 +389,10 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="text" class="form-control search-box" id="searchDenominations" 
-                           placeholder="Search denominations by value..." onkeyup="filterDenominations()">
+                    <input type="text" class="form-control search-box" id="searchDenominations"
+                        placeholder="Search denominations by value..." onkeyup="filterDenominations()">
                 </div>
-                
+
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
                     <p>Loading denominations...</p>
@@ -415,7 +423,8 @@
                 </div>
 
                 <div id="noDenominations" class="text-center" style="display: none;">
-                    <p>No denominations found. <a href="#" onclick="openCreateModal()">Add your first denomination</a></p>
+                    <p>No denominations found. <a href="#" onclick="openCreateModal()">Add your first denomination</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -475,7 +484,7 @@
         const standardDenominations = [2000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
 
         // Load denominations on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadDenominations();
         });
 
@@ -567,7 +576,7 @@
 
         function filterDenominations() {
             const searchTerm = document.getElementById('searchDenominations').value.toLowerCase();
-            const filteredDenominations = denominations.filter(denomination => 
+            const filteredDenominations = denominations.filter(denomination =>
                 denomination.value.toString().includes(searchTerm)
             );
             displayDenominations(filteredDenominations);
@@ -655,6 +664,7 @@
 
         function deleteDenomination(id, value) {
             deleteDenominationId = id;
+            deleteDenominationValue = value
             document.getElementById('deleteDenominationValue').textContent = value;
             document.getElementById('deleteModal').style.display = 'block';
         }
@@ -698,7 +708,7 @@
 
         async function confirmDelete() {
             try {
-                const response = await fetch(`/api/v1/denominations/${deleteDenominationId}`, {
+                const response = await fetch(`/api/v1/denominations/${deleteDenominationValue}`, {
                     method: 'DELETE'
                 });
 
@@ -727,20 +737,20 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type}`;
             alertDiv.textContent = message;
-            
+
             const container = document.querySelector('.container');
             container.insertBefore(alertDiv, container.firstChild);
-            
+
             setTimeout(() => {
                 alertDiv.remove();
             }, 5000);
         }
 
         // Close modals when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const denominationModal = document.getElementById('denominationModal');
             const deleteModal = document.getElementById('deleteModal');
-            
+
             if (event.target === denominationModal) {
                 closeModal();
             }
@@ -750,4 +760,5 @@
         }
     </script>
 </body>
+
 </html>

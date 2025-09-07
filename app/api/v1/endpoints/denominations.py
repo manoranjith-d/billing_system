@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.exceptions import DatabaseError, InvalidDenominationError
 from app.db.session import get_db
-from app.schemas.schemas import (Denomination, DenominationCreate,
-                                 DenominationUpdate)
+from app.schemas.schemas import (Denomination, DenominationCreate,MessageResponse, DenominationUpdate)
 from app.services.denomination_service import DenominationService
 
 router = APIRouter()
@@ -53,6 +52,24 @@ async def update_denomination(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except DatabaseError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+@router.delete("/{value}", response_model=MessageResponse)
+async def delete_denomination(value: int, db: Session = Depends(get_db)):
+    try:
+        denomination_service = DenominationService(db)
+        success = denomination_service.delete_denomination(value)
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Denomination not found"
+            )
+        return MessageResponse(detail=f"Denomination {value} deleted successfully")
+
+    except DatabaseError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 
 @router.post("/calculate-change", response_model=Dict[int, int])
