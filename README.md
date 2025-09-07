@@ -2,6 +2,20 @@
 
 A production-ready billing system built with FastAPI and PostgreSQL.
 
+## Assumptions
+- Done the ceil for total payable amount post tax - (Paisa/cents issue)
+- Added Customer given denominsations into denomination Table
+- Didn't added any authentication/logins for admin routes
+- Used AI agents to work on the UI templates 
+
+## How to use
+
+- run the application and hit the billing page api from static module.
+- http://127.0.0.1:8000/api/v1/
+
+## Demo
+- find the walkthrough on Demo.mp4 video
+
 ## Features
 
 - Product & Denomination management with CRUD operations under admin
